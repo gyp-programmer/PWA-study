@@ -1,0 +1,16 @@
+{
+    "name": "gyp-pwa",
+    "short_name": "gyp-test",
+    "description": "gyp pwa test",
+    "icons": [
+        {
+            "src": "icons/icon-168.png",
+            "sizes": "168x168",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/practice/PWA/index.html",
+    "display": "fullscreen",
+    "theme_color": "#B12A34",
+    "background_color": "#B12A34"
+}

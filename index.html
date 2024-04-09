@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>PWA入门篇</title>
+		<link rel="manifest" href="manifest.webmanifest">
+		<link rel="stylesheet" type="text/css" href="./css/index.css"/>
+		<script src="./js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="app.js" type="text/javascript" charset="utf-8" defer="defer"></script>
+	</head>
+	<style type="text/css">
+		.img-main img {
+			width: 350px;
+		}
+		.img-main img:nth-child(2) {
+			position: absolute;
+			animation: moveKeyBoard 3s infinite 1s;
+		}
+		@keyframes moveKeyBoard{
+			from{}
+			to{
+				left: 0;
+			}
+		}
+	</style>
+	<body>
+		<div class="pwa-door-article-main">
+			<input name="radio" type="radio" checked id="radio1">
+			<input name="radio" type="radio" id="radio2">
+			<input name="radio" type="radio" id="radio3">
+			<input name="radio" type="radio" id="radio4">
+			<input name="radio" type="radio" id="radio5">
+			<ul class="pdam-menu">
+				<li><label for="radio1">第一节</label></li>
+				<li><label for="radio2">第二节</label></li>
+				<li><label for="radio3">第三节</label></li>
+				<li><label for="radio4">第四节</label></li>
+				<li><label for="radio5">第五节</label></li>
+			</ul>
+			<div class="pdam-first-page pdam-page">
+				<h3>渐进式web应用（PWA）？</h3>
+				<p>
+					PWA 指的是使用指定技术和标准模式来开发的 Web 应用，这同时赋予它们 Web 应用和原生应用的特性。
+					
+				</p>
+				<p>
+					web应用：
+					更加易于发现：相比于安装应用，访问一个网站显然更加容易和迅速
+				</p>
+				<p>
+					原生应用：
+					与操作系统可以更加完美的整合，也因此为用户提供了无缝的用户体验。
+					你可以通过安装应用使得它在离线的状态下也可以运行；
+					相较于使用浏览器访问，用户也更喜欢通过点击主页上的图标来访问它们喜爱的应用
+				</p>
+			</div>
+			<div class="pdam-second-page pdam-page">
+				<h3>怎么使应用成为PWA？</h3>
+				<p>
+					前言：
+					PWA 不是只使用一种技术创建的。它代表了构建 Web 应用程序的新理念，涉及一些特定的模式，API 和其他功能。
+				</p>
+				<p>判断你的应用是否为PWA？</p>
+				<div class="psp-content">
+					<p>应用程序满足某些要求，或者实现了一组特定的功能，例如离线工作、可安装、易于同步、可以发送推送通知等，我们就可以将其视为 PWA
+					辨别一个 Web 应用是否是 PWA 有一些关键原则。一个 PWA 应该具有以下特点：</p>
+					<ul>
+						<li>可发现（Discoverable）, 可以通过搜索引擎发现。</li>
+						<li>可安装（Installable）, 可以出现在设备的主屏幕。</li>
+						<li>可链接（Linkable）, 可以简单地通过 URL 分享。</li>
+						<li>独立于网络（Network independent）, 可以在离线状态或者是在网速很差的情况下运行。</li>
+						<li>渐进式（Progressive）, 在老版本的浏览器仍旧可以使用，在新版本的浏览器上可以使用全部功能。</li>
+						<li>可重入（Re-engageable）, 无论何时有新的内容，都可以发送通知。</li>
+						<li>响应式（Responsive）, 在任何具有屏幕和浏览器的设备上可以正常使用——包括手机、平板电脑、笔记本、电视、冰箱等。</li>
+						<li>安全（Safe）, 在用户、应用和服务器之间的连接是安全的，第三方无法访问你的敏感数据。</li>
+					</ul>
+				</div>
+			</div>
+			<div class="pdam-thrid-page pdam-page">
+				<h3>通过Service workers让PWA离线工作</h3>
+				<div class="ptp-first">
+					<span class="pf-title">
+						Service Worker是什么
+					</span>
+					<p>
+						Service Worker 是浏览器和网络之间的虚拟代理。解决了如何正确缓存网站资源并使其在离线时可用的问题。
+						Service Worker 运行在一个与页面 JavaScript 主线程独立的线程上，并且无权访问 DOM 结构。
+						它不仅仅提供离线功能，还可以做包括处理通知、在单独的线程上执行繁重的计算等事务。Service workers 非常强大，
+						因为他们可以控制网络请求、修改网络请求、返回缓存的自定义响应，或者合成响应。
+					</p>
+					<p>service Workers 要求要必须在 HTTPS 下才能运行,因为它们非常强大，所以 Service Worker 只能在安全的上下文中执行（即 HTTPS）。如果您想在将代码推送到生产环境之前先进行实验，则可以始终在本地主机上进行测试或设置 GitHub Pages，这两者都支持HTTPS。
+						为了便于本地开发,localhost 也被浏览器认为是安全源 <a target="_blank" href="https://developer.mozilla.org/zh-CN/docs/Web/Progressive_web_apps/Add_to_home_screen">ngrok</a></p>
+				</div>
+				<div class="ptp-second">
+					<span>Service Worker离线</span>
+					<ul>
+						<li><a target="_blank" href="https://developer.mozilla.org/zh-CN/docs/Web/Progressive_web_apps/Add_to_home_screen">前提：manifest清单</a></li>
+						<li>
+							install
+							注册一个Service Worker(浏览器支持的时候)，注册完成后，sw.js 文件会自动下载、安装，然后激活。
+							我们可以初始化缓存并添加离线应用时所需的文件。
+						</li>
+						<li>fetch: 当缓存存在时，我们使用缓存来提供服务，而不重新请求数据。不管当前应用是在线还是离线，我们都这么做</li>
+						<li>
+							activate: 更新，当我们的应用有了一个新版本，Service Worker 会将我们所有的文件（包括那些新的文件）添加到一个新的缓存中。
+							这个时候一个新的 Service Worker 会在后台被安装，而旧的 Service Worker 仍然会正常运行，直到没有任何页面使用到它为止，
+							这时候新的 Service Worker 将会被激活，然后接管所有的页面。
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="pdam-four-page pdam-page">
+				<h3>IndexedDB 和 cacheStorage</h3>
+				<div class="ptp-first">
+					<span class="pf-title">
+						IndexedDB
+					</span>
+					<p>
+						浏览器内的SQLite，但是有一点不同，Indexed DB不属于关系型数据库，是NoSQL。
+					</p>
+					<p>特点：
+						键值对储存、
+						异步、
+						支持事务、
+						支持索引、
+						同源限制、
+						储存空间大、
+						支持二进制储存。
+						<img src="./static/img/bijiao.png" style="margin-top: 10px;margin-left: 40px;">
+					</p>
+				</div>
+				<div class="ptp-second">
+					<span>cacheStorage(浏览器缓存)</span>
+					<ul>
+						<li>所谓浏览器缓存其实就是指在本地使用的计算机中开辟一个内存区，同时也开辟一个硬盘区作为数据传输的缓冲区，然后用这个缓冲区来暂时保存用户以前访问过的信息。</li>
+						<li>表示 Cache 对象的存储。它提供了一个 ServiceWorker 、其它类型worker或者 window 范围内可以访问到的所有命名cache的主目录（它并不是一定要和service workers一起使用，即使它是在service workers规范中定义的），并维护一份字符串名称到相应 Cache 对象的映射。</li>
+						<li>
+							用来存储 Response 对象的，也就是对 HTTP 响应进行缓存
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="pdam-five-page pdam-page">
+				<button type="button" id="notifications">notifications</button>
+				<button type="button" id="syncBtn">触发同步任务</button>
+				<button type="button" id="fetchBtn">触发异步请求</button>
+				<div>
+					实操
+				</div>
+			</div>
+			<div class="mark-index">
+				<div class="mi-content">
+					PWA之离线缓存技术
+				</div>
+				<div class="mi-footer">
+					<span>宣讲人：高永鹏</span>
+				</div>
+				<span id="open">
+					<svg t="1646375876099" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2039" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50"><defs>
+						<style type="text/css"></style></defs>
+						<path d="M915.110634 526.94854c-11.698858-11.698858-30.697002-11.698858-42.39586 0L490.852065 
+						908.711259c-11.698858 11.698858-11.698858 30.697002 0 42.395859s30.697002 11.698858 42.39586 
+						0l381.762718-381.762718c11.798848-11.698858 11.798848-30.697002 0.099991-42.39586z" p-id="2040" fill="#ffffff"></path>
+						<path d="M534.247827 908.811249l-381.962699-381.962699c-11.698858-11.698858-30.697002-11.698858-42.395859 
+						0s-11.698858 30.697002 0 42.39586l381.962699 381.962699c11.698858 11.698858 30.697002 11.698858 42.395859 
+						0s11.698858-30.697002 0-42.39586z" p-id="2041" fill="#ffffff"></path>
+						<path d="M915.110634 72.992872c-11.698858-11.698858-30.697002-11.698858-42.39586 
+						0L490.852065 454.75559c-11.698858 11.698858-11.698858 30.697002 0 42.39586s30.697002 11.698858 
+						42.39586 0l381.762718-381.762718c11.798848-11.698858 11.798848-30.697002 0.099991-42.39586z" p-id="2042" fill="#ffffff"></path>
+						<path d="M534.247827 454.855581l-381.962699-381.962699c-11.698858-11.698858-30.697002-11.698858-42.395859 
+						0s-11.698858 30.697002 0 42.395859l381.962699 381.962699c11.698858 11.698858 30.697002 11.698858 42.395859 
+						0s11.698858-30.697002 0-42.395859z" p-id="2043" fill="#ffffff"></path>
+					</svg>
+				</span>
+			</div>
+			
+		</div>
+	</body>
+</html>

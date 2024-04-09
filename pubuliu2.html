@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>flex实现瀑布流</title>
+	</head>
+	<style>
+		.pubuliu-main {
+			display: flex;
+			gap: 15px;
+		}
+
+		.pm-left {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+			flex: 1;
+		}
+
+		.pm-right {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+			flex: 1;
+		}
+
+		.pm-left-item {
+			width: 100%;
+			background-color: antiquewhite;
+			transition: all 1s;
+		}
+
+		.pm-right-item {
+			background-color: aqua;
+			width: 100%;
+			transition: all 1s;
+		}
+
+		#loading {
+			width: 100%;
+			text-align: center;
+			background-color: aliceblue;
+			border-radius: 4px;
+			margin-top: 12px;
+			padding: 8px 0;
+			cursor: pointer;
+		}
+
+		#loading:hover {
+			color: #2193ff;
+		}
+	</style>
+	<body>
+		<input id="myInput" />
+		<button onclick="pause()">暂停</button>
+		<button onclick="start()">开始</button>
+		<div class="pubuliu-main">
+			<div class="pm-left">
+				<div class="pm-left-item" style="height: 150px;"></div>
+				<div class="pm-left-item" style="height: 550px;"></div>
+				<div class="pm-left-item" style="height: 350px;"></div>
+				<div class="pm-left-item" style="height: 250px;"></div>
+				<div class="pm-left-item" style="height: 650px;"></div>
+				<div class="pm-left-item" style="height: 450px;"></div>
+				<div class="pm-left-item" style="height: 200px;"></div>
+			</div>
+			<div class="pm-right">
+				<div class="pm-right-item" style="height: 200px;"></div>
+				<div class="pm-right-item" style="height: 450px;"></div>
+				<div class="pm-right-item" style="height: 250px;"></div>
+				<div class="pm-right-item" style="height: 650px;"></div>
+				<div class="pm-right-item" style="height: 750px;"></div>
+				<div class="pm-right-item" style="height: 350px;"></div>
+				<div class="pm-right-item" style="height: 550px;"></div>
+			</div>
+
+
+		</div>
+		<div id="loading">
+			点击加载...
+		</div>
+	</body>
+
+	<script>
+		const loadingBtn = document.getElementById('loading');
+		const leftBox = document.getElementsByClassName('pm-left')[0];
+		const rightBox = document.getElementsByClassName('pm-right')[0];
+
+		loadingBtn.addEventListener('click', () => {
+			const leftRandom = Math.floor(Math.random() * 700) + 150;
+			const rightRandom = Math.floor(Math.random() * 400) + 150;
+			const leftGenChild = document.createElement('div');
+			leftGenChild.className = 'pm-left-item';
+			leftGenChild.style.height = `${leftRandom}px`;
+			const rightGenChild = document.createElement('div');
+			rightGenChild.className = 'pm-right-item';
+			rightGenChild.style.height = `${rightRandom}px`;
+			leftBox.appendChild(leftGenChild)
+			rightBox.appendChild(rightGenChild);
+		})
+
+		function throttle(fn) {
+			let time = null;
+
+			return () => {
+				if (time) return;
+				time = setTimeout(() => {
+					fn.call(this, arguments);
+					clearTimeout(time);
+					time = null;
+				}, 400)
+			}
+		}
+
+		function debounce(fn) {
+			let time = null;
+			
+			return () => {
+				clearTimeout(time);
+				time = setTimeout(() => {
+					fn.call(this, arguments);
+				}, 500);
+
+			}
+		}
+
+		// 节流 防抖
+		const input = document.getElementById('myInput');
+		input.addEventListener('input', debounce(() => {
+			console.log('inputkkkkk')
+		}))
+		
+		/** 
+		 * 作用：任务队列的终端和暂停
+		 * @param {Funtion[]} tasks 任务队列 
+		 */
+		function taskRunning(tasks) {
+			let isRunning = false;
+			let result = [];
+			let i = 0;
+			return {
+				start: async () => {
+					if (isRunning) return;
+					isRunning = true;
+					while(i< tasks.length) {
+						console.log('任务开始', tasks[i]/1000);
+						const a = await sleep(tasks[i]);
+						console.log(a)
+						result.push(a);
+						i++;
+						if (!isRunning) {
+							return;
+						}
+					}
+					isRunning = false;
+					return result;
+				},
+				pause: () => {
+					isRunning = false;
+				}
+			}
+		}
+		const sleep = (time) => {
+			return new Promise(resolve => {
+				setTimeout(() => {
+					resolve('任务完成' + time / 1000)
+				}, time)
+			})
+		}
+		const tr = taskRunning([1000, 2000, 3000, 4000, 5000]);
+		
+		function start() {
+			tr.start();
+		}
+		function pause() {
+			tr.pause();
+		}
+		
+	</script>
+</html>
